@@ -12,7 +12,6 @@ To list all available commands, run::
     fab -l
 """
 
-
 import time
 
 from fabric.api import *  # noqa
@@ -27,8 +26,7 @@ def local():
     """
     Work on the local environment
     """
-    env.compose_file = "docker-compose.yml"
-    env.compose_version = "v1"
+    env.compose_file = "compose.yml"
     env.project_dir = "."
     env.run = lrun
     env.cd = lcd
@@ -43,8 +41,7 @@ def production():
     ]  # list the ip addresses or domain names of your production boxes here
     env.user = "root"  # remote user, see `env.run` if you don't log in as root
 
-    env.compose_file = "docker-compose.prod.yml"
-    env.compose_version = "v2"
+    env.compose_file = "compose.prod.yml"
     env.project_dir = "/code/djangopackages"  # this is the project dir where your code lives on this machine
     env.run = run  # if you don't log in as root, replace with 'env.run = sudo'
     env.cd = cd
@@ -113,14 +110,14 @@ def clearsessions():
     """
 
     with env.cd(env.project_dir):
-        docker_compose("run django-a python manage.py clearsessions")
+        docker_compose("run django-a python -m manage clearsessions")
 
 
 def cron():
     with env.cd(env.project_dir):
-        docker_compose("run django-a python manage.py import_classifiers")
-        docker_compose("run django-a python manage.py import_products")
-        docker_compose("run django-a python manage.py import_releases")
+        docker_compose("run django-a python -m manage import_classifiers")
+        docker_compose("run django-a python -m manage import_products")
+        docker_compose("run django-a python -m manage import_releases")
 
 
 def deploy(clearsessions: bool = False, stash: bool = False):
@@ -133,7 +130,7 @@ def deploy(clearsessions: bool = False, stash: bool = False):
     with env.cd(env.project_dir):
         # Clear old database sessions
         if clearsessions:
-            docker_compose("run django-a python manage.py clearsessions")
+            docker_compose("run django-a python -m manage clearsessions")
 
         # stash existing changes
         if stash:
@@ -176,15 +173,15 @@ def deploy(clearsessions: bool = False, stash: bool = False):
 
 
 def collectstatic(service):
-    docker_compose(f"exec {service} python manage.py collectstatic --no-input -v 1")
+    docker_compose(f"exec {service} python -m manage collectstatic --no-input -v 1")
 
 
 def maintenance_mode_on(service):
-    docker_compose(f"exec {service} python manage.py maintenance_mode on")
+    docker_compose(f"exec {service} python -m manage maintenance_mode on")
 
 
 def maintenance_mode_off(service):
-    docker_compose(f"exec {service} python manage.py maintenance_mode off")
+    docker_compose(f"exec {service} python -m manage maintenance_mode off")
 
 
 def purge_cache(service):
@@ -195,10 +192,10 @@ def purge_cache(service):
 
 def docker_compose(command, old=True):
     """
-    Run a docker-compose command
+    Run a docker compose command
     :param command: Command you want to run
     """
     with env.cd(env.project_dir):
-        if env.compose_version == "v2":
-            return env.run(f"docker compose -f {env.compose_file} {command}")
-        return env.run(f"docker-compose -f {env.compose_file} {command}")
+        return env.run(
+            f"docker compose -f {env.compose_file} --profile utility {command}"
+        )

@@ -1,9 +1,10 @@
 """Local test settings and globals which allows us to run our test suite
 locally.
 """
+
 import logging
 
-from settings.base import *  # noqa
+from settings import *  # noqa
 
 logging.disable(logging.CRITICAL)
 

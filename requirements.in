@@ -17,22 +17,29 @@ django-reversion
 django-secure
 django-structlog
 django-tables2
+django-tailwind-cli
 django-waffle
-Django<5.0
-djangorestframework<3.15
+Django>5.0
+djangorestframework<3.16
 emoji
 emojificate
 feedparser
+django-template-partials
 # github3.py
 github3.py<4.1
+heroicons[django]
 jinja2
+looseversion
+markdown-it-py[linkify]
+markdownify
 numpy
 openai
 packaging
 psutil
-psycopg2-binary
+psycopg[binary, pool]
 pydantic
 PyGithub
+pypistats
 python-dateutil
 python-gitlab
 pytz
@@ -40,7 +47,7 @@ requests
 requests-mock
 rich
 sentry-sdk
-social-auth-app-django
+social-auth-app-django==5.4.3
 social-auth-core
 sqlite-utils
 structlog
@@ -64,7 +71,6 @@ pytest
 pytest-cov
 pytest-django
 pytest-mock
-pytest-vcr
 time-machine
 
 # utils

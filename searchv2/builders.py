@@ -8,13 +8,13 @@ from searchv2.models import SearchV2
 from searchv2.utils import clean_title, remove_prefix
 
 
-def build_1():
+def build_1(*, verbose: bool = False):
     last_week = timezone.now() - timedelta(7)
 
     SearchV2.objects.filter(created__lte=last_week).delete()
 
-    index_packages()
-    index_groups()
+    index_packages(verbose=verbose)
+    index_groups(verbose=verbose)
 
     return SearchV2.objects.all()
 
@@ -68,7 +68,7 @@ def calc_package_weight(*, package: Package) -> int:
 
 
 def index_packages(verbose: bool = False):
-    for package in Package.objects.all():
+    for package in Package.objects.all().iterator():
         weight = calc_package_weight(package=package)
 
         if verbose:
@@ -86,6 +86,7 @@ def index_packages(verbose: bool = False):
                 "pypi_downloads": package.pypi_downloads,
                 "repo_forks": package.repo_forks,
                 "repo_watchers": package.repo_watchers,
+                "score": package.score,
                 "slug_no_prefix": remove_prefix(package.slug),
                 "title": package.title,
                 "title_no_prefix": remove_prefix(package.title),
@@ -137,7 +138,7 @@ def index_groups(verbose: bool = False):
     if verbose:
         print(f"{max_weight=}")
 
-    for grid in Grid.objects.all():
+    for grid in Grid.objects.all().iterator():
         weight = calc_grid_weight(grid=grid, max_weight=max_weight)
 
         if verbose:

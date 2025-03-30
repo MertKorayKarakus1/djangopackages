@@ -88,8 +88,10 @@ crashlytics-build.properties
 fabric.properties
 
 # docker
+compose.override.yml
 docker-compose.override.yml
 
 # our files
 *.db
 *.gz
+data

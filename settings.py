@@ -1,17 +1,35 @@
 # Django settings
+import os.path
 import sys
 from pathlib import Path
 
 import environ
+import sentry_sdk
+import structlog
 from django.template.defaultfilters import slugify
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
+
+from core import __version__
 
 env = environ.Env()
 
-PROJECT_ROOT = Path(__file__).parent.parent
+BASE_DIR = Path(__file__).parent
+
+PROJECT_ROOT = Path(__file__).parent
 
 DEBUG = env.bool("DJANGO_DEBUG", True)
 TEMPLATE_DEBUG = env.bool("TEMPLATE_DEBUG", True)
 TEST_MODE = "pytest" in sys.modules
+
+########## CACHE
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": env.str("REDIS_URL"),
+    }
+}
+
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -40,14 +58,14 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = True
 
-# RemovedInDjango50Warning: The default value of USE_TZ will change from
-# False to True in Django 5.0. Set USE_TZ to False in your project
-# settings if you want to keep the current default behavior.
 USE_TZ = False
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = PROJECT_ROOT.joinpath("media")
+if DEBUG:
+    MEDIA_ROOT = PROJECT_ROOT.joinpath("media")
+else:
+    MEDIA_ROOT = "/data/media"
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -56,7 +74,10 @@ MEDIA_URL = "/media/"
 
 # Absolute path to the directory that holds static files like app media.
 # Example: "/home/media/media.lawrence.com/apps/"
-STATIC_ROOT = PROJECT_ROOT.joinpath("collected_static")
+if DEBUG:
+    STATIC_ROOT = PROJECT_ROOT.joinpath("collected_static")
+else:
+    STATIC_ROOT = os.path.join(PROJECT_ROOT, "collected_static")
 
 # URL that handles the static files like app media.
 # Example: "http://media.lawrence.com"
@@ -66,6 +87,23 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     PROJECT_ROOT.joinpath("static"),
 ]
+
+HEALTHCHECK = env.bool("HEALTHCHECK", False)
+PACKAGE_HEALTHCHECK_URL = env.str("PACKAGE_HEALTHCHECK_URL", "")
+PYPI_HEALTHCHECK_URL = env.str("PYPI_HEALTHCHECK_URL", "")
+SEARCHV2_HEALTHCHECK_URL = env.str("SEARCHV2_HEALTHCHECK_URL", "")
+
+# Configure Redis
+REDIS_HOST = env("REDIS_HOST", default="redis")
+
+# Configure Celery
+CELERY_BROKER_URL = f"redis://{REDIS_HOST}:6379"
+CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:6379"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
+
 
 # Use the default admin media prefix, which is...
 # ADMIN_MEDIA_PREFIX = "/static/admin/"
@@ -118,6 +156,7 @@ TEMPLATES = [
                 "social_django.context_processors.backends",
                 "social_django.context_processors.login_redirect",
                 "core.context_processors.core_values",
+                "core.context_processors.settings_context",
             ],
         },
     },
@@ -130,8 +169,10 @@ AUTHENTICATION_BACKENDS = [
 PROJECT_APPS = [
     "grid",
     "apiv3",
+    "blog",
     "classifiers",
     "core",
+    "favorites",
     # "commands",
     "feeds",
     "homepage",
@@ -147,28 +188,42 @@ PREREQ_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
+    "django.contrib.sitemaps",
     "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.humanize",
     "django.contrib.staticfiles",
     # external
     "maintenance_mode",
-    "crispy_forms",
     "crispy_bootstrap3",
+    "crispy_forms",
     "django_better_admin_arrayfield",
     "django_extensions",
     "django_htmx",
     "django_tables2",
+    "django_tailwind_cli",
+    "heroicons",
     "emojificate",
     "rest_framework",
     "reversion",
     "social_django",
     "waffle",
     "django_q",
+    "template_partials",
+    "anymail",
 ]
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
 
+ANYMAIL = {
+    "MAILGUN_API_KEY": env.str("MAILGUN_API_KEY", "mail-gun-api-key"),
+    "MAILGUN_SENDER_DOMAIN": env.str("MAILGUN_SENDER_DOMAIN", "mail-gun-sender-domain"),
+}
+
+
+# Set the default scheme for forms.URLField to "https"
+# TODO: Remove transitional setting in Django 6.0
+FORMS_URLFIELD_ASSUME_HTTPS = True
 
 MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
 
@@ -189,13 +244,19 @@ CACHE_TIMEOUT = 60 * 60
 
 ROOT_URLCONF = "urls"
 
-SECRET_KEY = "CHANGEME"
+SECRET_KEY = env("SECRET_KEY", default="CHANGEME")
 
 URCHIN_ID = ""
 
 DEFAULT_FROM_EMAIL = "Django Packages <djangopackages-noreply@djangopackages.org>"
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_SUBJECT_PREFIX = "[Django Packages] "
+
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_SUBJECT_PREFIX = "[Django Packages] "
+else:
+    EMAIL_BACKEND = "anymail.backends.mailgun.MailgunBackend"
+    EMAIL_SUBJECT_PREFIX = env("EMAIL_SUBJECT_PREFIX", default="[Django Packages] ")
+
 SERVER_EMAIL = "info@djangopackages.org"
 
 
@@ -214,24 +275,44 @@ RESTRICT_PACKAGE_EDITORS = False
 
 # if set to False  any auth user can add/modify grids
 # only django admins can delete
-RESTRICT_GRID_EDITORS = True
+if DEBUG:
+    RESTRICT_GRID_EDITORS = True
+else:
+    RESTRICT_GRID_EDITORS = False
+
+# Sentry Configuration
+
+if SENTRY_DSN := env("DJANGO_SENTRY_DSN", default=None):
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration(), RedisIntegration()],
+        release=f"{__version__}",
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production.
+        traces_sample_rate=0.2,
+        # Set profiles_sample_rate to 1.0 to profile 100%
+        # of sampled transactions.
+        # This setting is relative to the traces_sample_rate setting.
+        profiles_sample_rate=0.8,
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True,
+    )
 
 
 LOCAL_INSTALLED_APPS = []
-SUPPORTED_REPO = []
 
 ########################## Site specific stuff
-FRAMEWORK_TITLE = "Django"
-SITE_TITLE = "Django Packages"
+FRAMEWORK_TITLE = env("FRAMEWORK_TITLE", default="Django")
+SITE_TITLE = env("SITE_TITLE", default="Django Packages")
 
 PACKAGE_SCORE_MIN = env.int("PACKAGE_SCORE_MIN", default=-500)
 
 if LOCAL_INSTALLED_APPS:
     INSTALLED_APPS.extend(LOCAL_INSTALLED_APPS)
 
-# SUPPORTED_REPO.extend(["bitbucket", "github", "gitlab"])
-SUPPORTED_REPO.extend(["bitbucket", "github"])
-
+SUPPORTED_REPO = ["bitbucket", "github", "gitlab", "codeberg"]
 
 AUTHENTICATION_BACKENDS = (
     "social_core.backends.github.GithubOAuth2",
@@ -267,10 +348,26 @@ LOGIN_REDIRECT_URL = "/"
 # associate user via email
 # SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
 
+
+########## DATABASE CONFIGURATION
+# ------------------------------------------------------------------------------
+# Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
 DATABASES = {"default": env.db("DATABASE_URL")}
+DATABASES["default"] = env.db("DATABASE_URL")
+DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True
+DATABASES["default"]["CONN_HEALTH_CHECKS"] = True
+DATABASES["default"]["OPTIONS"] = {
+    "pool": {
+        "min_size": 2,
+        "max_size": 10,
+        "timeout": 10,
+    }
+}
+
+########## END DATABASE CONFIGURATION
+
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-
 
 WSGI_APPLICATION = "wsgi.application"
 
@@ -282,47 +379,97 @@ if DEBUG and not TEST_MODE:
         "SHOW_TOOLBAR_CALLBACK": lambda _request: DEBUG,
     }
 
+########## django-secure
+
+# TODO: remove django-secure
+if not DEBUG:
+    INSTALLED_APPS += [
+        "djangosecure",
+    ]
+
+    # set this to 60 seconds and then to 518400 when you can prove it works
+    SECURE_HSTS_SECONDS = 60
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_FRAME_DENY = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+
+    # TODO: Change this to True when we get closer to real deployment
+    SECURE_SSL_REDIRECT = False
+
+    ########## end django-secure
+
+
 ADMIN_URL_BASE = env("ADMIN_URL_BASE", default="admin/")
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': True,
-#     'formatters': {
-#         'standard': {
-#             'format': "[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s",
-#             'datefmt': "%d/%b/%Y %H:%M:%S"
-#         },
-#     },
-#     'handlers': {
-#         'console': {
-#             'level': 'DEBUG',
-#             'class': 'logutils.colorize.ColorizingStreamHandler',
-#             'formatter': 'standard'
-#         },
-#         'mail_admins': {
-#             'level': 'ERROR',
-#             'class': 'django.utils.log.AdminEmailHandler',
-#             'include_html': True,
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['console', ],
-#             'propagate': True,
-#             'level': 'ERROR',
-#         },
-#         'django.request': {
+if not DEBUG:
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": True,
+        "root": {
+            "level": "WARNING",
+            "handlers": ["console"],
+        },
+        "formatters": {
+            "json_formatter": {
+                "()": structlog.stdlib.ProcessorFormatter,
+                "processor": structlog.processors.JSONRenderer(),
+            },
+            "plain_console": {
+                "()": structlog.stdlib.ProcessorFormatter,
+                "processor": structlog.dev.ConsoleRenderer(),
+            },
+            "key_value": {
+                "()": structlog.stdlib.ProcessorFormatter,
+                "processor": structlog.processors.KeyValueRenderer(
+                    key_order=["timestamp", "level", "event", "logger"]
+                ),
+            },
+            "verbose": {
+                "format": "%(levelname)s %(asctime)s %(module)s "
+                "%(process)d %(thread)d %(message)s"
+            },
+        },
+        "handlers": {
+            "console": {
+                "level": "DEBUG",
+                "class": "logging.StreamHandler",
+                "formatter": "plain_console",
+            },
+        },
+        "loggers": {
+            "django.db.backends": {
+                "level": "ERROR",
+                "handlers": ["console"],
+                "propagate": True,
+            },
+            "django_structlog": {
+                "handlers": ["console"],
+                "level": "INFO",
+                "propagate": False,
+            },
+        },
+    }
 
-#             'handlers': ['mail_admins'],
-#             'level': 'ERROR',
-#             'propagate': False,
-#         },
-#         '': {
-#             'handlers': ['console', ],
-#             'level': os.env('DEBUG_LEVEL', 'ERROR'),
-#         },
-#     }
-# }
+    structlog.configure(
+        processors=[
+            structlog.contextvars.merge_contextvars,
+            structlog.stdlib.filter_by_level,
+            structlog.processors.TimeStamper(fmt="iso"),
+            structlog.stdlib.add_logger_name,
+            structlog.stdlib.add_log_level,
+            structlog.stdlib.PositionalArgumentsFormatter(),
+            structlog.processors.StackInfoRenderer(),
+            structlog.processors.format_exc_info,
+            structlog.processors.UnicodeDecoder(),
+            structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
+        ],
+        logger_factory=structlog.stdlib.LoggerFactory(),
+        wrapper_class=structlog.stdlib.BoundLogger,
+        cache_logger_on_first_use=True,
+    )
 
 
 URL_REGEX_GITHUB = r"(?:http|https|git)://github.com/[^/]*/([^/]*)/{0,1}"
@@ -348,6 +495,7 @@ REST_FRAMEWORK = {
 }
 
 WAFFLE_CREATE_MISSING_SWITCHES = True
+WAFFLE_CREATE_MISSING_FLAGS = True
 
 # django-maintenance-mode settings
 MAINTENANCE_MODE = None
@@ -374,3 +522,9 @@ if DEBUG:
     DOCS_URL = "http://0.0.0.0:4000"
 else:
     DOCS_URL = "https://docs.djangopackages.org"
+
+TAILWIND_CLI_AUTOMATIC_DOWNLOAD = False
+TAILWIND_CLI_CONFIG_FILE = "tailwind.config.js"
+TAILWIND_CLI_DIST_CSS = "css/tailwind.css"
+TAILWIND_CLI_SRC_CSS = "tailwindcss.css"
+TAILWIND_CLI_VERSION = "3.4.3"

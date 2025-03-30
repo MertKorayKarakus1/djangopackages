@@ -1,18 +1,16 @@
 {% extends "base.html" %}
 
-{% load i18n %}
-{% load package_tags %}
-{% load emojificate %}
-{% load page_metadata_tags %}
+{% load emojificate heroicons humanize i18n package_tags page_metadata_tags partials static waffle_tags %}
 
 {% block metadata %}
-    {% page_metadata page_title=package.title|emojify|emojificate page_description=package.repo_description page_keywords=package.grid_set.all|join:','  og_image_url=package.get_opengraph_image_url %}
-{% endblock %}
+    {% page_metadata page_title=package.title|emojify|emojificate page_description=package.repo_description page_keywords=package.grid_set.all|join:',' og_image_url=package.get_opengraph_image_url %}
+{% endblock metadata %}
 
 {% block extra_head %}
     {{ block.super }}
     {% include 'includes/_ethicalads-js.html' %}
-{% endblock %}
+    <script src="{% static 'js/clipboard.min.js' %}"></script>
+{% endblock extra_head %}
 
 {% block breadcrumb %}
     <div class="breadcrumb">
@@ -20,18 +18,34 @@
             <div class="row">
                 <div class="col-xs-12">
                     <h2>
-                        <a href="{% url 'packages' %}">{% trans "Packages" %}</a> ›› {{ package.title }}
+                        <a href="{% url 'packages' %}">{% translate "Packages" %}</a> ›› {{ package.title }}
                         <div class="pull-right">
                             <div class="btn btn-default">
                                 <a href="{% url 'edit_package' package.slug %}"><span class="glyphicon glyphicon-pencil"></span></a>
                             </div>
+                            {% flag "favorite_feature_flag" %}
+                                <script>
+                                    document.body.addEventListener('htmx:configRequest', function(event) {
+                                        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}'; // add a new parameter into the mix
+                                    });
+                                </script>
+                                <span id="favorite">
+                                    {% if is_favorited %}
+                                        {% include "package/partials/favorites.html#unfavorite_btn" %}
+                                    {% else %}
+                                        {% include "package/partials/favorites.html#favorite_btn" %}
+                                    {% endif %}
+                                </span>
+                            {% endflag %}
+
+
                         </div>
                     </h2>
                 </div>
             </div>
         </div>
     </div>
-{% endblock %}
+{% endblock breadcrumb %}
 
 {% block body %}
 
@@ -65,15 +79,15 @@
                 <div class="alert alert-warning" role="alert">This project was archived</div>
             {% endif %}
 
-            <div class="outline">{{ package.repo_description | emojify | emojificate }}</div>
+            <div class="outline">{{ package.repo_description|emojify|emojificate }}</div>
 
             {% comment %}
     <h3>Usage</h3>
       <table class="table">
         <thead>
         <tr>
-          <th>{% trans "Category" %}</th>
-          <th>{% trans "# Using This" %}</th>
+          <th>{% translate "Category" %}</th>
+          <th>{% translate "# Using This" %}</th>
         </tr>
         </thead>
 
@@ -85,7 +99,7 @@
             <td>
                 {{ package.usage.count }}
                 &nbsp;
-                {% with package as package %}
+                {% with package=package %}
                     {% usage_button %}
                 {% endwith %}
             </td>
@@ -95,33 +109,75 @@
 
     <!-- end Usage panel -->
     {% endcomment %}
-            <h2>Repo Activity
+            <h2>
+                {% translate "Repo Activity" %}
                 <div class="pull-right" id="fetch-cell">
                     {% if package.last_fetched %}
-                        <span class="small-text"> Last fetched: {{ package.last_fetched|timesince }} ago</span>&nbsp;
+                        <span class="small-text">{% translate "Last fetched" %}: {{ package.last_fetched|timesince }} ago</span>&nbsp;
                     {% endif %}
                     <a class="btn btn-default btn-xs"
-                       href="{% url 'fetch_package_data' package.slug %}">{% trans "Fetch latest data" %}</a>
+                       href="{% url 'fetch_package_data' package.slug %}">{% translate "Fetch latest data" %}</a>
                 </div>
             </h2>
 
-            <table class="table">
+            <table class="table" aria-label="Repository Statistics">
                 <thead>
                     <tr>
-                        <th></th>
-                        <th>{% trans "Commits" %}</th>
-                        <th><span class="glyphicon glyphicon-star"></span></th>
-                        <th><span class="glyphicon glyphicon-random"></span></th>
+                        <th scope="col">Repository</th>
+                        <th
+                            scope="col"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            aria-label="{% translate 'History of commits in the last 52 weeks' %}"
+                            title="{% translate 'History of commits in the last 52 weeks' %}"
+                        >
+                            {% translate "Commits" %}
+                        </th>
+                        {% flag "enabled_packages_score_values" %}
+                            <th
+                                {% if TEST_MODE %}data-testid="repository-statistics-score-header"{% endif %}
+                                scope="col"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                aria-label="{% translate 'Score' %}"
+                                title="{% translate 'Scores (0-100) are based on Repository stars, with deductions for inactivity (-10% every 3 months) and lack of Python 3 support (-30%).' %}"
+                            >
+                                <span class="glyphicon glyphicon-stats"></span>
+                            </th>
+                        {% endflag %}
+                        <th
+                            scope="col"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            aria-label="{% translate 'Number of Stars' %}"
+                            title="{% translate 'Number of stars on the Repository.' %}"
+                        >
+                            <span class="glyphicon glyphicon-star"></span>
+                        </th>
+                        <th
+                            scope="col"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            aria-label="{% translate 'Number of Forks' %}"
+                            title="{% translate 'Number of forks on the Repository.' %}"
+                        >
+                            <span class="glyphicon glyphicon-random"></span>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><a href="{{ package.repo_url }}">{{ package.repo_url }}</a></td>
-                        <td><img
-                            src="https://chart.googleapis.com/chart?cht=bvg&chs=105x20&chd=t:{{ package.commits_over_52 }}&chco=666666&chbh=1,1,1&chds=0,20"/>
+                        <td scope="row"><a href="{{ package.repo_url }}">{{ package.repo_url }}</a></td>
+                        <td>
+                            {% include "package/includes/_commits.html" with value=package.commits_over_52 %}
                         </td>
-                        <td>{{ package.repo_watchers|default:"n/a" }}</td>
-                        <td>{{ package.repo_forks|default:"n/a" }}</td>
+                        {% flag "enabled_packages_score_values" %}
+                            <td {% if TEST_MODE %}data-testid="repository-statistics-score-cell"{% endif %}>
+                                {{ package.score|intcomma|default:"n/a" }}
+                            </td>
+                        {% endflag %}
+                        <td>{{ package.repo_watchers|intcomma|default:"n/a" }}</td>
+                        <td>{{ package.repo_forks|intcomma|default:"n/a" }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -136,11 +192,11 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>{% trans "Version" %}</th>
-                            <th>{% trans "License" %}</th>
-                            <th>{% trans "Released" %}</th>
-                            <th>{% trans "Status" %}</th>
-                            <th>{% trans "Python 3?" %}</th>
+                            <th>{% translate "Version" %}</th>
+                            <th>{% translate "License" %}</th>
+                            <th>{% translate "Released" %}</th>
+                            <th>{% translate "Status" %}</th>
+                            <th>{% translate "Python 3?" %}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -179,7 +235,7 @@
                 </table>
             {% else %}
                 <div class="panel-body">
-                    <p>{% trans "No PyPI release" %}</p>
+                    <p>{% translate "No PyPI release" %}</p>
                 </div>
             {% endif %}
             <!-- end PyPI panel -->
@@ -206,7 +262,7 @@
                     </div>
                 {% endif %}
 
-                <h3>{% trans "Documentation" %}</h3>
+                <h3>{% translate "Documentation" %}</h3>
                 <div class="pull-right">
                     {% if request.user.is_authenticated %}
                         <a href="{% url 'edit_documentation' package.slug %}"><span
@@ -223,7 +279,7 @@
                 <h3>Repo</h3>
                 <p><a href="{{ package.repo_url }}" target="_blank">{{ package.repo_url }}</a></p>
 
-                <h3>{% trans "Comparison Grids" %}</h3>
+                <h3>{% translate "Comparison Grids" %}</h3>
                 <div class="pull-right">
                     {% if request.user.is_authenticated and profile.can_add_grid %}
                         <a id="find-a-grid" href="#"><span class="glyphicon glyphicon-plus"></span></a>
@@ -237,7 +293,7 @@
                     {% include "package/includes/_attach_grid.html" %}
                 {% endif %}
 
-                <h3>{% trans "Sites using this package" %}</h3>
+                <h3>{% translate "Sites using this package" %}</h3>
                 <div class="pull-right">
                     {% if request.user.is_authenticated %}
                         <a href="{% url 'add_example' package.slug %}"><span
@@ -245,7 +301,7 @@
                     {% endif %}
                 </div>
 
-                {% with package.active_examples as examples %}
+                {% with examples=package.active_examples %}
                     {% if examples %}
                         <ul>
                             {% for example in examples %}
@@ -262,15 +318,22 @@
                         <p>No sites using this package have been listed yet.</p>
                     {% endif %}
                 {% endwith %}
+
+                <h3>{% translate "README Badge" %}</h3>
+                <div>
+                    {% blocktranslate %}If you're the maintainer of this project, publicize Django Packages by adding the badge to your README!{% endblocktranslate %}
+                    <div>
+                        <pre id="badgeurl">[![Published on Django Packages](https://img.shields.io/badge/Published%20on-Django%20Packages-0c3c26)]({{ request.build_absolute_uri }})
+<button class="copybtn btn btn-default btn-xs" aria-label="{% translate 'Copy to Clipboard' %}" title="{% translate 'Copy to Clipboard' %}" data-clipboard-target="#badgeurl">{% heroicon_outline 'document-duplicate' %}</button></pre>
+                    </div>
+                </div>
             </div>
-
-
         </div>
 
     </div>
     <div class="row" style="padding-bottom: 20px;">
         <div class="col-sm-12">
-            <h2>{% trans "Contributors" %}</h2>
+            <h2>{% translate "Contributors" %}</h2>
 
             <p>
                 {% for participant in package.participant_list %}
@@ -279,13 +342,13 @@
             </p>
         </div>
     </div>
-{% endblock %}
+{% endblock body %}
 
 {% block javascript %}
     {{ block.super }}
     <script src="{{ STATIC_URL }}js/underscore.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/gh3.js" type="text/javascript"></script>
-{% endblock %}
+{% endblock javascript %}
 
 {% block extra_body %}
 
@@ -314,7 +377,8 @@
                 });
 
             });
-
         });
     </script>
-{% endblock %}
+    <script src="{% static 'js/htmx.min.js' %}" defer></script>
+    <script>new ClipboardJS('.copybtn');</script>
+{% endblock extra_body %}

@@ -19,7 +19,7 @@ Django Packages makes it easier to compare packages to one another using **grids
 
 Django Packages supports packages hosted on the following platforms:
 
-- BitBucket (some support)
+- Bitbucket (some support)
 - GitHub (fully supported)
 - GitLab (some support)
 
@@ -31,4 +31,4 @@ Do you want to contribute to making [Django Packages](https://djangopackages.org
 2. Consult the [contributing] instructions to help make your first pull request a success
 
 [contributing]: contributing.md
-[installation]: install.md
+[installation]: contributing.md#install-django-packages-locally

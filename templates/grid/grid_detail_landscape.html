@@ -1,24 +1,15 @@
 {% extends "grid/base.html" %}
 
-{% load emojificate %}
-{% load grid_tags %}
-{% load i18n %}
-{% load package_tags %}
-{% load page_metadata_tags %}
+{% load emojificate grid_tags i18n package_tags page_metadata_tags %}
 
 {% block metadata %}
     {% page_metadata page_title=grid.title page_description=grid.description page_keywords=grid.packages.all|join:',' %}
-{% endblock %}
+{% endblock metadata %}
 
 {% block javascript %}
-    <script src="{{ STATIC_URL }}bower_components/jquery/jquery.min.js" type="text/javascript"></script>
+    {{ block.super }}
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js"></script>
-    <script src="{{ STATIC_URL }}components/audreyr-rotatingnav/dist/jquery.rotatingnav.min.js"></script>
-    <script src="{{ STATIC_URL }}components/audreyr-topbar/dist/jquery.topbar.min.js"></script>
-    <script src="{{ STATIC_URL }}js/jquery.tablesorter.min.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/jquery.dataTables.min.js" type="text/javascript"></script>
-    <script src="{{ STATIC_URL }}js/jquery.tools.min.js" type="text/javascript"></script>
-    <script src="{{ STATIC_URL }}js/site.js" type="text/javascript"></script>
 {% endblock javascript %}
 
 {% block body %}
@@ -119,14 +110,14 @@
                                 {% if attribute_name == "repo" %}
                                     <td><a href="{{ package.package.repo_url }}">{{ package.package.repo }}</a></td>
                                 {% else %}
-                                    {% with attribute_name|style_attribute:package.package as val %}
+                                    {% with val=attribute_name|style_attribute:package.package %}
                                         <td>{{ val }}</td>
                                     {% endwith %}
                                 {% endif %}
                             {% endif %}
                         {% endfor %}
                         {% for feature in features %}
-                            {% with elements|hash:feature.pk|hash:package.pk as element %}
+                            {% with element=elements|hash:feature.pk|hash:package.pk %}
                                 <td id="element-f{{ feature.pk }}-p{{ package.pk }}">{% if element %}{{ element.text|style_element|safe|urlize|linebreaksbr }}{% endif %}<noscript> <a class="edit" href="{% url 'edit_element' feature.pk package.pk %}">[edit]</a></noscript></td>
                             {% endwith %}
                         {% endfor %}
@@ -159,7 +150,7 @@
     {% endif %}
 
 
-{% endblock %}
+{% endblock body %}
 
 {% block extra_body %}
     <script type="text/javascript">
@@ -179,7 +170,7 @@
             if (usingSimpleGrid) {
                 // just keep the simple table, then set the toggle to reload to a smart grid
                 toggleURL = toggleURL.replace('?simpleGrid=true','');
-                $('#grid-toggle').html('<a href="'+ toggleURL +'">{% trans "Switch to smart grid" %}</a>');
+                $('#grid-toggle').html('<a href="'+ toggleURL +'">{% translate "Switch to smart grid" %}</a>');
             } else {
                 // set the toggle to reload to a simple table, then build a smart grid
                 if (window.location.search.indexOf('simpleGrid=true') === -1) {
@@ -189,7 +180,7 @@
                         toggleURL = toggleURL.replace('?', '?simpleGrid=true&');
                     }
                 }
-                $('#grid-toggle').html('<a href="'+ toggleURL +'">{% trans "Switch to simple table" %}</a>');
+                $('#grid-toggle').html('<a href="'+ toggleURL +'">{% translate "Switch to simple table" %}</a>');
 
 
                 /* freeze table-column widths before splitting the package grid */
@@ -227,7 +218,7 @@
                 // Handle element edit redirects
                 {% for feature in features %}
                     {% for grid_package in grid_packages %}
-                        {% with elements|hash:feature.pk|hash:grid_package.pk as element %}
+                        {% with element=elements|hash:feature.pk|hash:grid_package.pk %}
 
                         {% endwith %}
 
@@ -297,4 +288,4 @@
             handleRTD($.makeArray($('table#grid span.rtd-status')));
         });
     </script>
-{% endblock %}
+{% endblock extra_body %}

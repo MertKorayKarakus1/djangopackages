@@ -14,20 +14,20 @@ class Profile(BaseModel):
     #     Examples:
     #       github_url = 'pydanny'
     #       bitbucket_url = 'pydanny'
-    #       google_code_url = 'pydanny'
     github_account = models.CharField(
-        _("Github account"), null=True, blank=True, max_length=40
+        _("GitHub account"), null=True, blank=True, max_length=40
     )
     github_url = models.CharField(
-        _("Github account"), null=True, blank=True, max_length=100, editable=False
+        _("GitHub account"), null=True, blank=True, max_length=100, editable=False
     )
     bitbucket_url = models.CharField(
         _("Bitbucket account"), null=True, blank=True, max_length=100
     )
-    google_code_url = models.CharField(
-        _("Google Code account"), null=True, blank=True, max_length=100
+    gitlab_url = models.CharField(
+        _("GitLab account"), null=True, blank=True, max_length=100
     )
     email = models.EmailField(_("Email"), null=True, blank=True)
+    share_favorites = models.BooleanField(_("Share Favorites"), default=False)
 
     def __str__(self):
         if not self.github_account:
@@ -50,9 +50,9 @@ class Profile(BaseModel):
         If url doesn't exist return None.
         """
         url_mapping = {
-            "Github": self.github_account,
-            "BitBucket": self.bitbucket_url,
-            "Google Code": self.google_code_url,
+            "GitHub": self.github_account,
+            "Bitbucket": self.bitbucket_url,
+            "GitLab": self.gitlab_url,
         }
         return url_mapping.get(repo.title)
 
@@ -142,3 +142,12 @@ class Profile(BaseModel):
         if getattr(settings, "RESTRICT_GRID_EDITORS", False):
             return self.user.has_perm("grid.change_element")
         return True
+
+
+class ExtraField(BaseModel):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    label = models.CharField(max_length=256)
+    url = models.URLField(max_length=256)
+
+    def __str__(self):
+        return f"{self.profile} - {self.url}"

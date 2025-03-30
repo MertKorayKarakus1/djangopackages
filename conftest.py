@@ -4,7 +4,6 @@ import logging
 import pytest
 from django.test.utils import override_settings
 
-
 pytest_plugins = [
     "grid.tests.fixtures",
     "homepage.tests.fixtures",
@@ -17,13 +16,24 @@ TEST_SETTINGS = {
     "CACHES": {
         "default": {
             "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-            # "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        }
+        },
+        "waffle_cache_backend": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "unique-snowflake",
+        },
     },
     "CELERY_TASK_ALWAYS_EAGER": True,
     "EMAIL_BACKEND": "django.core.mail.backends.locmem.EmailBackend",
     "LOGGING_CONFIG": None,
     "PASSWORD_HASHERS": ["django.contrib.auth.hashers.MD5PasswordHasher"],
+    # Note:
+    # By setting the Waffle cache to a LocMemCache isntead of DummyCache,
+    # we can avoid the overhead of hitting the database for each waffle
+    # query for FLags, Switches, and Samples, which is increasing the number
+    # of queries made in testing mode by at least 5.
+    "WAFFLE_CACHE_NAME": "waffle_cache_backend",
+    "WAFFLE_CREATE_MISSING_SWITCHES": False,
+    "WAFFLE_CREATE_MISSING_FLAGS": False,
 }
 
 
@@ -50,14 +60,3 @@ def set_time(time_machine):
 def use_test_settings():
     with override_settings(**TEST_SETTINGS):
         yield
-
-
-@pytest.fixture(scope="module")
-def vcr_config():
-    return {
-        # Replace the Authorization request header with "DUMMY" in cassettes
-        "filter_headers": [
-            ("authorization", "DUMMY"),
-            ("PRIVATE-TOKEN", "DUMMY"),
-        ],
-    }

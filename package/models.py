@@ -2,7 +2,6 @@ import json
 import math
 import re
 from datetime import timedelta
-from distutils.version import LooseVersion
 
 import requests
 from dateutil import relativedelta
@@ -19,6 +18,7 @@ from django.utils import timezone
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 from django_better_admin_arrayfield.models.fields import ArrayField
+from looseversion import LooseVersion
 from packaging.specifiers import SpecifierSet
 from requests.exceptions import HTTPError
 from rich import print
@@ -102,6 +102,9 @@ class Package(BaseModel):
         help_text="List of collaborats/participants on the project",
         blank=True,
     )
+    favorite_count = models.IntegerField(
+        _("Favorite"), default=0, help_text="Favorite count"
+    )
     usage = models.ManyToManyField(User, blank=True)
     created_by = models.ForeignKey(
         User, blank=True, null=True, related_name="creator", on_delete=models.SET_NULL
@@ -154,6 +157,12 @@ class Package(BaseModel):
     @property
     def is_deprecated(self):
         return self.date_deprecated is not None
+
+    @property
+    def has_favorite(self):
+        if self.favorite_count > 0:
+            return True
+        return False
 
     def get_pypi_uri(self):
         if self.pypi_name and len(self.pypi_name):
@@ -318,6 +327,7 @@ class Package(BaseModel):
                             [
                                 True
                                 for ver in [
+                                    "3.12",
                                     "3.11",
                                     "3.10",
                                     "3.9",
@@ -374,6 +384,20 @@ class Package(BaseModel):
                 # Calculate total downloads
                 if self.pypi_downloads is None:
                     self.pypi_downloads = total_downloads
+
+                # get documents_url from pypi
+                if not self.documentation_url:
+                    if docs_url := info["project_urls"].get("Documentation"):
+                        self.documentation_url = docs_url
+
+                    elif docs_url := info["project_urls"].get("Docs"):
+                        self.documentation_url = docs_url
+
+                    elif docs_url := info["project_urls"].get("docs"):
+                        self.documentation_url = docs_url
+
+                    elif docs_url := info["project_urls"].get("documentation"):
+                        self.documentation_url = docs_url
 
                 return True
 

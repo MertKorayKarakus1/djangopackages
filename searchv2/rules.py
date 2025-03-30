@@ -3,7 +3,7 @@ from django.utils import timezone
 from pydantic import BaseModel
 
 from package.models import Package
-from settings.base import DOCS_URL
+from django.conf import settings
 
 
 class CheckResult(BaseModel):
@@ -116,7 +116,7 @@ class DeprecatedRule(ScoreRule):
     name: str = "Deprecated Rule"
     description: str = "Check if the package is deprecated"
     max_score: int = 20
-    documentation_url: str = f"{DOCS_URL}/rules/deprecated"
+    documentation_url: str = f"{settings.DOCS_URL}/rules/deprecated"
 
     def check(self, package: Package) -> CheckResult:
         """
@@ -132,6 +132,28 @@ class DeprecatedRule(ScoreRule):
             return CheckResult(score=0, message="Package is deprecated.")
 
 
+class FavoritePackageRule(ScoreRule):
+    """
+    A specific rule that checks if the package is favorite.
+    """
+
+    name: str = "Favorite Package Rule"
+    description: str = "Check if the package is favorite"
+    max_score: int = 20
+    documentation_url: str = f"{settings.DOCS_URL}/rules/favorite-package"
+
+    def check(self, package: Package) -> CheckResult:
+        """
+        Check if the package is favorite.
+        Returns a full score and a success message if the package is not favorite,
+        or a zero score and an error message otherwise.
+        """
+        if package.has_favorite:
+            return CheckResult(score=self.max_score, message="Package is favorite.")
+        else:
+            return CheckResult(score=0, message="Package is not favorite.")
+
+
 class DescriptionRule(ScoreRule):
     """
     A specific rule that checks if the package has a description.
@@ -140,7 +162,7 @@ class DescriptionRule(ScoreRule):
     name: str = "Description Rule"
     description: str = "Check if the package has a description"
     max_score: int = 20
-    documentation_url: str = f"{DOCS_URL}/rules/description"
+    documentation_url: str = f"{settings.DOCS_URL}/rules/description"
 
     def check(self, package: Package) -> CheckResult:
         """
@@ -185,7 +207,7 @@ class DownloadsRule(ScoreRule):
     name: str = "Downloads Rule"
     description: str = "Score based on the number of PyPi downloads"
     max_score: int = 20
-    documentation_url: str = f"{DOCS_URL}/rules/downloads"
+    documentation_url: str = f"{settings.DOCS_URL}/rules/downloads"
 
     def check(self, package: Package) -> CheckResult:
         """
@@ -213,7 +235,7 @@ class ForkRule(ScoreRule):
     name: str = "Fork Rule"
     description: str = "Score based on the number of forks"
     max_score: int = 20
-    documentation_url: str = f"{DOCS_URL}/rules/fork"
+    documentation_url: str = f"{settings.DOCS_URL}/rules/fork"
 
     def check(self, package: Package) -> CheckResult:
         """
@@ -252,25 +274,29 @@ class LastUpdatedRule(ScoreRule):
             last_updated = package.last_updated()
             now = timezone.now()
 
-            if (now - last_updated) < timedelta(90):  # less than 3 months
-                return CheckResult(
-                    score=self.max_score,
-                    message="Package was updated less than 3 months ago.",
-                )
-            elif (now - last_updated) < timedelta(182):  # less than 6 months
-                return CheckResult(
-                    score=int(self.max_score / 2),
-                    message="Package was updated less than 6 months ago.",
-                )
-            elif (now - last_updated) < timedelta(365):  # less than 1 year
-                return CheckResult(
-                    score=int(self.max_score / 4),
-                    message="Package was updated less than 1 year ago.",
-                )
-            else:
-                return CheckResult(
-                    score=0, message="Package was updated more than 1 year ago."
-                )
+            if last_updated:
+                if (now - last_updated) < timedelta(90):  # less than 3 months
+                    return CheckResult(
+                        score=self.max_score,
+                        message="Package was updated less than 3 months ago.",
+                    )
+                elif (now - last_updated) < timedelta(182):  # less than 6 months
+                    return CheckResult(
+                        score=int(self.max_score / 2),
+                        message="Package was updated less than 6 months ago.",
+                    )
+                elif (now - last_updated) < timedelta(365):  # less than 1 year
+                    return CheckResult(
+                        score=int(self.max_score / 4),
+                        message="Package was updated less than 1 year ago.",
+                    )
+                else:
+                    return CheckResult(
+                        score=0, message="Package was updated more than 1 year ago."
+                    )
+
+            return CheckResult(score=0, message="No update data found for the package.")
+
         except AttributeError:
             return CheckResult(score=0, message="No update data found for the package.")
 
@@ -316,7 +342,7 @@ class UsageCountRule(ScoreRule):
     name: str = "Usage Count Rule"
     description: str = "Score based on the usage count"
     max_score: int = 20
-    documentation_url: str = f"{DOCS_URL}/rules/usage_count"
+    documentation_url: str = f"{settings.DOCS_URL}/rules/usage_count"
 
     def check(self, package: Package) -> CheckResult:
         """
@@ -342,7 +368,7 @@ class WatchersRule(ScoreRule):
     name: str = "Watchers Rule"
     description: str = "Score based on the number of watchers"
     max_score: int = 20
-    documentation_url: str = f"{DOCS_URL}/rules/watchers"
+    documentation_url: str = f"{settings.DOCS_URL}/rules/watchers"
 
     def check(self, package: Package) -> CheckResult:
         """

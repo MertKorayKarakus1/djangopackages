@@ -4,7 +4,7 @@ Django Packages helps you easily identify and compare good apps, frameworks, plu
 
 ## Badges
 
-[![image](https://github.com/djangopackages/djangopackages/actions/workflows/actions.yml/badge.svg)](https://github.com/djangopackages/djangopackages/actions/workflows/actions.yml) [![Documentation Status](https://readthedocs.org/projects/djangopackages/badge/?version=latest)](https://docs.djangopackages.org/en/latest/?badge=latest) [![Updates](https://pyup.io/repos/github/djangopackages/djangopackages/shield.svg)](https://pyup.io/repos/github/djangopackages/djangopackages/)
+[![image](https://github.com/djangopackages/djangopackages/actions/workflows/actions.yml/badge.svg)](https://github.com/djangopackages/djangopackages/actions/workflows/actions.yml) [![Documentation Status](https://readthedocs.org/projects/djangopackages/badge/?version=latest)](https://docs.djangopackages.org/en/latest/?badge=latest) [![Updates](https://pyup.io/repos/github/djangopackages/djangopackages/shield.svg)](https://pyup.io/repos/github/djangopackages/djangopackages/) [![Published on Django Packages](https://img.shields.io/badge/Published%20on-Django%20Packages-0c3c26)](https://djangopackages.org/packages/p/djangopackages/)
 
 ## Features
 
@@ -14,7 +14,7 @@ Django Packages helps you easily identify and compare good apps, frameworks, plu
 -   Storage of package info, fetched from public APIs
     -   PyPI
     -   GitHub
-    -   BitBucket
+    -   Bitbucket
     -   GitLab (coming soon)
 -   Basic search
     -   Autocomplete packages/grids
@@ -25,7 +25,7 @@ Django Packages helps you easily identify and compare good apps, frameworks, plu
 
 ## Quickstart
 
-For detailed installation instructions, consult the [docs](https://docs.djangopackages.org/en/latest/install).
+For detailed installation instructions, consult the [docs](https://docs.djangopackages.org/en/latest/contributing/#install-django-packages-locally).
 
 To download, install and start the local server for development, simply run:
 
@@ -33,8 +33,8 @@ To download, install and start the local server for development, simply run:
 git clone git@github.com:djangopackages/djangopackages.git
 cd djangopackages
 cp .env.local.example .env.local
-docker-compose build
-docker-compose up
+docker compose build
+docker compose up
 ```
 
 Then point your browser to http://localhost:8000 and start hacking!
@@ -42,15 +42,14 @@ Then point your browser to http://localhost:8000 and start hacking!
 If you are running into conflicting port issues, we have an override file which re-maps Django (port: 18000) and Postgres (port: 45432). To activate it, simply run:
 
 ```shell
-cp docker-compose.override.yml.example docker-compose.override.yml
-docker-compose build
-docker-compose up
+docker compose build
+docker compose up
 ````
 
 To run tests, run:
 
 ```shell
-docker-compose run django pytest
+docker compose run django pytest
 ```
 
 ## The Site

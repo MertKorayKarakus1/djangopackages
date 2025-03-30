@@ -17,7 +17,6 @@ from django.views.decorators.http import require_POST
 from django.views.generic.base import TemplateView
 from django_q.tasks import async_task
 from django_tables2 import SingleTableView
-from settings.base import DOCS_URL
 
 from grid.models import Grid
 from package.forms import (
@@ -39,6 +38,7 @@ from searchv2.rules import RecentReleaseRule
 from searchv2.rules import ScoreRuleGroup
 from searchv2.rules import UsageCountRule
 from searchv2.rules import WatchersRule
+from favorites.models import Favorite
 
 
 def repo_data_for_js():
@@ -461,6 +461,7 @@ class PackagePython3ListView(SingleTableView):
         return (
             Package.objects.filter(version__supports_python3=True)
             .select_related()
+            .annotate(usage_count=Count("usage"))
             .distinct()
             .order_by("-pypi_downloads", "-repo_watchers", "title")
         )
@@ -487,7 +488,7 @@ def package_details_rules(request, slug, template_name="package/package_rules.ht
         name="Activity Rules",
         description="Rules related to the package's recent activity",
         max_score=40,
-        documentation_url=f"{DOCS_URL}/rules/groups/activity",
+        documentation_url=f"{settings.DOCS_URL}/rules/groups/activity",
         rules=[LastUpdatedRule(), RecentReleaseRule()],
     )
 
@@ -546,10 +547,13 @@ def package_detail(request, slug, template_name="package/package.html"):
         pypi_ancient = False
         pypi_no_release = False
         warnings = no_development
-
+    is_favorited = False
+    if request.user.is_authenticated:
+        is_favorited = Favorite.objects.filter(
+            favorited_by=request.user, package=package
+        ).exists()
     if request.GET.get("message"):
         messages.add_message(request, messages.INFO, request.GET.get("message"))
-
     return render(
         request,
         template_name,
@@ -561,6 +565,7 @@ def package_detail(request, slug, template_name="package/package.html"):
             warnings=warnings,
             latest_version=package.last_released(),
             repo=package.repo,
+            is_favorited=is_favorited,
         ),
     )
 

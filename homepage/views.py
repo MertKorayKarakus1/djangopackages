@@ -27,6 +27,7 @@ class OpenView(TemplateView):
             "total_django_4_1": "Framework :: Django :: 4.1",
             "total_django_4_2": "Framework :: Django :: 4.2",
             "total_django_5_0": "Framework :: Django :: 5.0",
+            "total_django_5_1": "Framework :: Django :: 5.1",
             "total_python_2_7": "Programming Language :: Python :: 2.7",
             "total_python_3": "Programming Language :: Python :: 3",
             "total_python_3_6": "Programming Language :: Python :: 3.6",
@@ -36,6 +37,7 @@ class OpenView(TemplateView):
             "total_python_3_10": "Programming Language :: Python :: 3.10",
             "total_python_3_11": "Programming Language :: Python :: 3.11",
             "total_python_3_12": "Programming Language :: Python :: 3.12",
+            "total_python_3_13": "Programming Language :: Python :: 3.13",
         }
         vcs_providers = {
             "repos_bitbucket": "bitbucket.org",
@@ -173,12 +175,14 @@ class ReadinessDetailView(TemplateView):
         context_data["ready_condition"] = ready_condition
 
         packages = (
-            Package.objects.only("title", "pypi_downloads", "pypi_classifiers", "slug")
+            Package.objects.only(
+                "title", "pypi_downloads", "pypi_classifiers", "slug", "repo_watchers"
+            )
             .filter(pypi_classifiers__contains=pypi_classifier)
             .exclude(
                 Q(title="django") | Q(slug="django")
             )  # TODO: might be worth re-addressing...
-            .order_by("-pypi_downloads")[:limit]
+            .order_by("-repo_watchers", "-pypi_downloads")[:limit]
         )
 
         packages = [package.__dict__ for package in packages]
@@ -203,17 +207,6 @@ class ReadinessDetailView(TemplateView):
         context_data["product_slug"] = product_slug.title()
 
         return context_data
-
-
-class SitemapView(TemplateView):
-    template_name = "sitemap.xml"
-    content_type = "text/xml"
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["packages"] = Package.objects.all()
-        data["grids"] = Grid.objects.all()
-        return data
 
 
 def homepage(request, template_name="homepage.html"):

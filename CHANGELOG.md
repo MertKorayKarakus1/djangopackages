@@ -1,5 +1,473 @@
 <!-- GENERATOR_PLACEHOLDER -->
 
+## [2025-03-27]
+### Changed
+- :memo: fixed formatting for rules page ([#1372](https://github.com/djangopackages/djangopackages/pull/1372))
+
+## [2025-03-26]
+### Changed
+- Added Python 3 Support ([#1366](https://github.com/djangopackages/djangopackages/pull/1366))
+
+## [2025-03-24]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1371](https://github.com/djangopackages/djangopackages/pull/1371))
+- ⬆️ Bump mkdocstrings[python] from 0.26.2 to 0.29.0 in the dependencies group ([#1370](https://github.com/djangopackages/djangopackages/pull/1370))
+- Reporting Bad Data ([#1367](https://github.com/djangopackages/djangopackages/pull/1367))
+
+## [2025-03-23]
+### Changed
+- Fixed Docs Build ([#1368](https://github.com/djangopackages/djangopackages/pull/1368))
+
+## [2025-03-20]
+### Changed
+- ⬆️ Bump the dependencies group with 8 updates ([#1364](https://github.com/djangopackages/djangopackages/pull/1364))
+- [pre-commit.ci] pre-commit autoupdate ([#1363](https://github.com/djangopackages/djangopackages/pull/1363))
+
+## [2025-03-10]
+### Changed
+- ⬆️ Bump the dependencies group with 22 updates ([#1362](https://github.com/djangopackages/djangopackages/pull/1362))
+
+## [2025-03-06]
+### Changed
+- ⬆️ Bump jinja2 from 3.1.5 to 3.1.6 in /docs ([#1361](https://github.com/djangopackages/djangopackages/pull/1361))
+- ⬆️ Bump jinja2 from 3.1.5 to 3.1.6 ([#1359](https://github.com/djangopackages/djangopackages/pull/1359))
+- ⬆️ Bump django from 5.1.5 to 5.1.7 ([#1360](https://github.com/djangopackages/djangopackages/pull/1360))
+
+## [2025-03-04]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1358](https://github.com/djangopackages/djangopackages/pull/1358))
+
+## [2025-02-25]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1356](https://github.com/djangopackages/djangopackages/pull/1356))
+
+## [2025-02-22]
+### Changed
+- ⬆️ Bump cryptography from 43.0.3 to 44.0.1 ([#1347](https://github.com/djangopackages/djangopackages/pull/1347))
+
+## [2025-02-13]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1346](https://github.com/djangopackages/djangopackages/pull/1346))
+
+## [2025-02-10]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1344](https://github.com/djangopackages/djangopackages/pull/1344))
+
+## [2025-01-31]
+### Changed
+- :tractor: Sort-of fix for Search ([#1342](https://github.com/djangopackages/djangopackages/pull/1342))
+
+## [2025-01-28]
+### Changed
+- Cleanup `SUPPORTED_REPO` Settings ([#1340](https://github.com/djangopackages/djangopackages/pull/1340))
+- ⬆️ Bump the dependencies group with 5 updates ([#1337](https://github.com/djangopackages/djangopackages/pull/1337))
+- [pre-commit.ci] pre-commit autoupdate ([#1338](https://github.com/djangopackages/djangopackages/pull/1338))
+- :copyright: Update copyright notice ([#1339](https://github.com/djangopackages/djangopackages/pull/1339))
+
+## [2025-01-24]
+### Changed
+- #1062 Integrate score value into Search results ([#1333](https://github.com/djangopackages/djangopackages/pull/1333))
+- ⬆️ Bump the dependencies group with 18 updates ([#1335](https://github.com/djangopackages/djangopackages/pull/1335))
+
+## [2025-01-22]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1336](https://github.com/djangopackages/djangopackages/pull/1336))
+
+## [2025-01-17]
+### Changed
+- ⬆️ Bump django from 5.1.4 to 5.1.5 ([#1334](https://github.com/djangopackages/djangopackages/pull/1334))
+- fix participant extraction in CodebergHandler ([#1329](https://github.com/djangopackages/djangopackages/pull/1329))
+
+## [2025-01-07]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1327](https://github.com/djangopackages/djangopackages/pull/1327))
+
+## [2025-01-06]
+### Changed
+- ⬆️ Bump the dependencies group with 3 updates ([#1326](https://github.com/djangopackages/djangopackages/pull/1326))
+
+## [2025-01-01]
+### Changed
+- ⬆️ Bump the dependencies group with 3 updates ([#1323](https://github.com/djangopackages/djangopackages/pull/1323))
+
+## [2024-12-31]
+### Changed
+- 🔥 Updates Codeberg User reference ([#1325](https://github.com/djangopackages/djangopackages/pull/1325))
+- Integrate score value into Package/Grid results #1063 ([#1322](https://github.com/djangopackages/djangopackages/pull/1322))
+- codeberg support #1266 ([#1321](https://github.com/djangopackages/djangopackages/pull/1321))
+
+## [2024-12-28]
+### Changed
+- ⬆️ Bump jinja2 from 3.1.4 to 3.1.5 in /docs ([#1319](https://github.com/djangopackages/djangopackages/pull/1319))
+
+## [2024-12-24]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1320](https://github.com/djangopackages/djangopackages/pull/1320))
+
+## [2024-12-23]
+### Changed
+- ⬆️ Bump the dependencies group with 8 updates ([#1318](https://github.com/djangopackages/djangopackages/pull/1318))
+
+## [2024-12-16]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1316](https://github.com/djangopackages/djangopackages/pull/1316))
+- ⬆️ Bump the dependencies group with 2 updates ([#1315](https://github.com/djangopackages/djangopackages/pull/1315))
+
+## [2024-12-10]
+### Changed
+- ⬆️ Bump the dependencies group across 1 directory with 27 updates ([#1314](https://github.com/djangopackages/djangopackages/pull/1314))
+- [pre-commit.ci] pre-commit autoupdate ([#1313](https://github.com/djangopackages/djangopackages/pull/1313))
+
+## [2024-12-06]
+### Changed
+- ⬆️ Bump django from 5.1.2 to 5.1.4 ([#1311](https://github.com/djangopackages/djangopackages/pull/1311))
+
+## [2024-12-03]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1310](https://github.com/djangopackages/djangopackages/pull/1310))
+
+## [2024-11-26]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1309](https://github.com/djangopackages/djangopackages/pull/1309))
+
+## [2024-11-19]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1307](https://github.com/djangopackages/djangopackages/pull/1307))
+
+## [2024-11-12]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1306](https://github.com/djangopackages/djangopackages/pull/1306))
+
+## [2024-11-11]
+### Changed
+- Added a string rep of favorite ([#1305](https://github.com/djangopackages/djangopackages/pull/1305))
+
+## [2024-11-05]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1304](https://github.com/djangopackages/djangopackages/pull/1304))
+
+## [2024-11-02]
+### Changed
+- ✨ Adds delay option to pypi_stats ([#1303](https://github.com/djangopackages/djangopackages/pull/1303))
+- :gear: :whale: Adds missing `--profile` option ([#1302](https://github.com/djangopackages/djangopackages/pull/1302))
+- :hammer: Adds pypistats ([#1300](https://github.com/djangopackages/djangopackages/pull/1300))
+
+## [2024-10-30]
+### Changed
+- broken link fix ([#1299](https://github.com/djangopackages/djangopackages/pull/1299))
+
+## [2024-10-28]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1297](https://github.com/djangopackages/djangopackages/pull/1297))
+
+## [2024-10-27]
+### Changed
+- [APIv4] Make Grid and Package Detail API accept both `slug` and `pk` ([#1296](https://github.com/djangopackages/djangopackages/pull/1296))
+
+## [2024-10-26]
+### Changed
+- :tractor: Expand uv recipes and fix “fab deploy” ([#1294](https://github.com/djangopackages/djangopackages/pull/1294))
+- :sparkles: Adds searchv3 builder ([#1284](https://github.com/djangopackages/djangopackages/pull/1284))
+- Ugly hack to start settings files consolidation ([#1280](https://github.com/djangopackages/djangopackages/pull/1280))
+
+## [2024-10-25]
+### Changed
+- upgrading to python 3.12 ([#1291](https://github.com/djangopackages/djangopackages/pull/1291))
+
+## [2024-10-21]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1293](https://github.com/djangopackages/djangopackages/pull/1293))
+
+## [2024-10-16]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1290](https://github.com/djangopackages/djangopackages/pull/1290))
+
+## [2024-10-08]
+### Changed
+- :arrow_up: Bumps all requirements ([#1288](https://github.com/djangopackages/djangopackages/pull/1288))
+- [pre-commit.ci] pre-commit autoupdate ([#1287](https://github.com/djangopackages/djangopackages/pull/1287))
+
+## [2024-10-06]
+### Changed
+- Try Djade (Django template formatter) ([#1283](https://github.com/djangopackages/djangopackages/pull/1283))
+
+## [2024-10-01]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1281](https://github.com/djangopackages/djangopackages/pull/1281))
+
+## [2024-09-30]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1271](https://github.com/djangopackages/djangopackages/pull/1271))
+
+## [2024-09-26]
+### Changed
+- Consolidate contributing and installation guides ([#1277](https://github.com/djangopackages/djangopackages/pull/1277))
+- Add a README Badge ([#1275](https://github.com/djangopackages/djangopackages/pull/1275))
+
+## [2024-09-18]
+### Changed
+- :fire: Removes `--reuse-db` testing option ([#1270](https://github.com/djangopackages/djangopackages/pull/1270))
+- :elephant: :tractor: Moves connection pooling to docker settings ([#1269](https://github.com/djangopackages/djangopackages/pull/1269))
+
+## [2024-09-17]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1267](https://github.com/djangopackages/djangopackages/pull/1267))
+
+## [2024-09-10]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1265](https://github.com/djangopackages/djangopackages/pull/1265))
+
+## [2024-09-06]
+### Changed
+- Migrate to `psycopg3` and add connection pooling ([#1261](https://github.com/djangopackages/djangopackages/pull/1261))
+
+## [2024-09-03]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1262](https://github.com/djangopackages/djangopackages/pull/1262))
+
+## [2024-08-30]
+### Changed
+- :arrow_up: Upgrade Django to 5.1 ([#1247](https://github.com/djangopackages/djangopackages/pull/1247))
+
+## [2024-08-29]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1260](https://github.com/djangopackages/djangopackages/pull/1260))
+
+## [2024-08-23]
+### Changed
+- Add Search Hotkey (&#34;/&#34;) for Navbar Search Input ([#1258](https://github.com/djangopackages/djangopackages/pull/1258))
+- [pre-commit.ci] pre-commit autoupdate ([#1254](https://github.com/djangopackages/djangopackages/pull/1254))
+
+## [2024-08-21]
+### Changed
+- Fix Large Grid Display Issue ([#1255](https://github.com/djangopackages/djangopackages/pull/1255))
+
+## [2024-08-13]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1251](https://github.com/djangopackages/djangopackages/pull/1251))
+
+## [2024-08-09]
+### Changed
+- :pencil: Updates repo_watchers ([#1249](https://github.com/djangopackages/djangopackages/pull/1249))
+
+## [2024-08-08]
+### Changed
+- :arrow_up: Bumps for Django 5.1 and Python 3.13 ([#1248](https://github.com/djangopackages/djangopackages/pull/1248))
+
+## [2024-08-07]
+### Changed
+- ⬆️ Bump django from 5.0.7 to 5.0.8 ([#1244](https://github.com/djangopackages/djangopackages/pull/1244))
+- Profile view update ([#1245](https://github.com/djangopackages/djangopackages/pull/1245))
+- fix #1234: Add FavoritePackageRule to score favorite packages ([#1237](https://github.com/djangopackages/djangopackages/pull/1237))
+- Fix docs in github codespace ([#1241](https://github.com/djangopackages/djangopackages/pull/1241))
+
+## [2024-08-05]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1240](https://github.com/djangopackages/djangopackages/pull/1240))
+
+## [2024-08-04]
+### Changed
+- share favorites in profile form ([#1239](https://github.com/djangopackages/djangopackages/pull/1239))
+
+## [2024-07-31]
+### Changed
+- favorite package feature flag ([#1233](https://github.com/djangopackages/djangopackages/pull/1233))
+- add git and git cli and precommit in devcontainer ([#1232](https://github.com/djangopackages/djangopackages/pull/1232))
+- Favorite Packages: Modify User Profile view ([#1230](https://github.com/djangopackages/djangopackages/pull/1230))
+- [pre-commit.ci] pre-commit autoupdate ([#1229](https://github.com/djangopackages/djangopackages/pull/1229))
+
+## [2024-07-26]
+### Changed
+- :bug: Fixes a last_updated is None issue ([#1226](https://github.com/djangopackages/djangopackages/pull/1226))
+- :tractor: Re-stage TailwindCSS ([#1225](https://github.com/djangopackages/djangopackages/pull/1225))
+- favorite and unfavorite view package ([#1218](https://github.com/djangopackages/djangopackages/pull/1218))
+
+## [2024-07-24]
+### Changed
+- Feat/add share favorites ([#1221](https://github.com/djangopackages/djangopackages/pull/1221))
+
+## [2024-07-23]
+### Changed
+- :pencil: Updates footer and funding pages ([#1220](https://github.com/djangopackages/djangopackages/pull/1220))
+
+## [2024-07-22]
+### Changed
+- ⬆️ Bump the dependencies group with 10 updates ([#1217](https://github.com/djangopackages/djangopackages/pull/1217))
+- :books: Adds Rebuild Search Indexs to docs ([#1216](https://github.com/djangopackages/djangopackages/pull/1216))
+
+## [2024-07-21]
+### Changed
+- :whale: Docker hotfix ([#1215](https://github.com/djangopackages/djangopackages/pull/1215))
+
+## [2024-07-19]
+### Changed
+- package_admin favorite_count ([#1211](https://github.com/djangopackages/djangopackages/pull/1211))
+- tests for opensearch ([#1209](https://github.com/djangopackages/djangopackages/pull/1209))
+- use F field ([#1208](https://github.com/djangopackages/djangopackages/pull/1208))
+- Favorite model and favorites app ([#1204](https://github.com/djangopackages/djangopackages/pull/1204))
+- Add the field favorite_count to package model ([#1206](https://github.com/djangopackages/djangopackages/pull/1206))
+
+## [2024-07-18]
+### Changed
+- Add opensearch  ([#1200](https://github.com/djangopackages/djangopackages/pull/1200))
+
+## [2024-07-16]
+### Changed
+- ⬆️ Bump the dependencies group with 30 updates ([#1197](https://github.com/djangopackages/djangopackages/pull/1197))
+- [pre-commit.ci] pre-commit autoupdate ([#1198](https://github.com/djangopackages/djangopackages/pull/1198))
+
+## [2024-07-12]
+### Changed
+- :art: Updates filter layout ([#1196](https://github.com/djangopackages/djangopackages/pull/1196))
+- ⬆️ Bump django from 5.0.6 to 5.0.7 ([#1194](https://github.com/djangopackages/djangopackages/pull/1194))
+- Inline filter results on grid page ([#1190](https://github.com/djangopackages/djangopackages/pull/1190))
+
+## [2024-07-10]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1193](https://github.com/djangopackages/djangopackages/pull/1193))
+
+## [2024-07-02]
+### Changed
+- :elephant: Adds pg_dump and pg_restore recipes ([#1188](https://github.com/djangopackages/djangopackages/pull/1188))
+- Add changelog pre-footer link ([#1185](https://github.com/djangopackages/djangopackages/pull/1185))
+- [pre-commit.ci] pre-commit autoupdate ([#1186](https://github.com/djangopackages/djangopackages/pull/1186))
+
+## [2024-06-28]
+### Changed
+- :green_heart: Adds tests for documentation_url ([#1184](https://github.com/djangopackages/djangopackages/pull/1184))
+
+## [2024-06-27]
+### Changed
+- Extract documentaion_url from pypi ([#1180](https://github.com/djangopackages/djangopackages/pull/1180))
+- :green_heart: Removes pk’s from load data ([#1181](https://github.com/djangopackages/djangopackages/pull/1181))
+
+## [2024-06-25]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1182](https://github.com/djangopackages/djangopackages/pull/1182))
+
+## [2024-06-23]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1175](https://github.com/djangopackages/djangopackages/pull/1175))
+
+## [2024-06-14]
+### Changed
+- documentation_url field added ([#1173](https://github.com/djangopackages/djangopackages/pull/1173))
+- contributing docs fix ([#1172](https://github.com/djangopackages/djangopackages/pull/1172))
+
+## [2024-06-10]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1168](https://github.com/djangopackages/djangopackages/pull/1168))
+
+## [2024-06-04]
+### Changed
+- [DOCS] Add APIv4 Documentation ([#1165](https://github.com/djangopackages/djangopackages/pull/1165))
+- [pre-commit.ci] pre-commit autoupdate ([#1164](https://github.com/djangopackages/djangopackages/pull/1164))
+
+## [2024-05-31]
+### Changed
+- :sparkles: Add feeds to the Changelog ([#1163](https://github.com/djangopackages/djangopackages/pull/1163))
+
+## [2024-05-28]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1161](https://github.com/djangopackages/djangopackages/pull/1161))
+
+## [2024-05-24]
+### Changed
+- :whale: Refactor docker compose ([#1159](https://github.com/djangopackages/djangopackages/pull/1159))
+- :sparkles: Adds pypi_update_top_package_stats management command ([#1160](https://github.com/djangopackages/djangopackages/pull/1160))
+
+## [2024-05-21]
+### Changed
+- :fire: Remove user api crawling ([#1158](https://github.com/djangopackages/djangopackages/pull/1158))
+- :bug: Fix broken python3 using this filter ([#1157](https://github.com/djangopackages/djangopackages/pull/1157))
+- :arrow_up: Updates deps ([#1156](https://github.com/djangopackages/djangopackages/pull/1156))
+- [pre-commit.ci] pre-commit autoupdate ([#1153](https://github.com/djangopackages/djangopackages/pull/1153))
+
+## [2024-05-03]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1148](https://github.com/djangopackages/djangopackages/pull/1148))
+
+## [2024-04-28]
+### Changed
+- Move Sitemaps to Django Sitemap Framework ([#1147](https://github.com/djangopackages/djangopackages/pull/1147))
+
+## [2024-04-27]
+### Changed
+- ⬆️ Bump social-auth-app-django from 5.4.0 to 5.4.1 ([#1145](https://github.com/djangopackages/djangopackages/pull/1145))
+
+## [2024-04-19]
+### Changed
+- :art: urlize extra field url value ([#1142](https://github.com/djangopackages/djangopackages/pull/1142))
+- Remove Full Page Cache for `stack/` Page ([#1140](https://github.com/djangopackages/djangopackages/pull/1140))
+- :broom: Target version cleanup ([#1141](https://github.com/djangopackages/djangopackages/pull/1141))
+- Replace Google Chart with `svg-sparkline.js` for Commit Chart Generation ([#1129](https://github.com/djangopackages/djangopackages/pull/1129))
+- :arrow_up: Weekly upgrades ([#1139](https://github.com/djangopackages/djangopackages/pull/1139))
+- Add Tech Stack Page ([#1133](https://github.com/djangopackages/djangopackages/pull/1133))
+- ⬆️ Bump sqlparse from 0.4.4 to 0.5.0 ([#1137](https://github.com/djangopackages/djangopackages/pull/1137))
+
+## [2024-04-16]
+### Changed
+- Issue 1115 update profile page options ([#1125](https://github.com/djangopackages/djangopackages/pull/1125))
+- [pre-commit.ci] pre-commit autoupdate ([#1136](https://github.com/djangopackages/djangopackages/pull/1136))
+- :elephant: Updates Profiles extra fields migration ([#1138](https://github.com/djangopackages/djangopackages/pull/1138))
+
+## [2024-04-12]
+### Changed
+- ⬆️ Bump idna from 3.6 to 3.7 ([#1131](https://github.com/djangopackages/djangopackages/pull/1131))
+- [pre-commit.ci] pre-commit autoupdate ([#1127](https://github.com/djangopackages/djangopackages/pull/1127))
+- ⬆️ Bump idna from 3.6 to 3.7 in /docs ([#1130](https://github.com/djangopackages/djangopackages/pull/1130))
+
+## [2024-04-03]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1124](https://github.com/djangopackages/djangopackages/pull/1124))
+
+## [2024-03-29]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1123](https://github.com/djangopackages/djangopackages/pull/1123))
+
+## [2024-03-21]
+### Changed
+- Enable Sentry Profiling ([#1122](https://github.com/djangopackages/djangopackages/pull/1122))
+
+## [2024-03-19]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1121](https://github.com/djangopackages/djangopackages/pull/1121))
+
+## [2024-03-15]
+### Changed
+- :tractor: Adds raw_id_fields to Profile ([#1120](https://github.com/djangopackages/djangopackages/pull/1120))
+- Update User Profile ([#1119](https://github.com/djangopackages/djangopackages/pull/1119))
+
+## [2024-03-14]
+### Changed
+- :tractor: Switch to uv --system ([#1117](https://github.com/djangopackages/djangopackages/pull/1117))
+
+## [2024-03-13]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1116](https://github.com/djangopackages/djangopackages/pull/1116))
+
+## [2024-03-08]
+### Changed
+- :tractor: :whale: Switch to uv add upgrade reqs ([#1114](https://github.com/djangopackages/djangopackages/pull/1114))
+
+## [2024-03-01]
+### Changed
+- :sparkles: Adds robots.txt file ([#1113](https://github.com/djangopackages/djangopackages/pull/1113))
+
+## [2024-02-24]
+### Changed
+- :sparkles: Add Blog app + model ([#1110](https://github.com/djangopackages/djangopackages/pull/1110))
+
+## [2024-02-23]
+### Changed
+- ⬆️ Bump the dependencies group with 11 updates ([#1109](https://github.com/djangopackages/djangopackages/pull/1109))
+- [pre-commit.ci] pre-commit autoupdate ([#1107](https://github.com/djangopackages/djangopackages/pull/1107))
+- Upgrade to Django 5.0 ([#1105](https://github.com/djangopackages/djangopackages/pull/1105))
+
+## [2024-02-16]
+### Changed
+- [pre-commit.ci] pre-commit autoupdate ([#1104](https://github.com/djangopackages/djangopackages/pull/1104))
+
 ## [2024-02-09]
 ### Changed
 - 📝 Clean up for nav display ([#1096](https://github.com/djangopackages/djangopackages/pull/1096))

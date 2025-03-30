@@ -1,6 +1,5 @@
-from distutils.version import LooseVersion as versioner
-
 from django.db import models
+from looseversion import LooseVersion
 from requests.compat import quote
 from trove_classifiers import classifiers
 
@@ -43,7 +42,7 @@ def get_version(package):
 def get_pypi_version(package):
     versions = []
     for v_str in package.version_set.values_list("number", flat=True):
-        v = versioner(v_str)
+        v = LooseVersion(v_str)
         comparable = True
         for elem in v.version:
             if isinstance(elem, str):

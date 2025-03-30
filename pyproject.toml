@@ -1,5 +1,5 @@
 [tool.bumpver]
-current_version = "2024.2.2"
+current_version = "2025.3.13"
 version_pattern = "YYYY.MM.INC1"
 commit_message = ":bookmark: bump version {old_version} -> {new_version}"
 commit = true
@@ -12,9 +12,9 @@ tag = true
 ]
 
 [tool.pytest.ini_options]
-addopts = "--durations=1 --nomigrations --reuse-db -vv"
-DJANGO_SETTINGS_MODULE = "settings.test"
-norecursedirs = ".git config node_modules scss settings sponsors static templates"
+addopts = "--durations=1 --nomigrations"
+DJANGO_SETTINGS_MODULE = "tests.settings"
+norecursedirs = ".git config node_modules scss sponsors static templates"
 python_files = "test_*.py"
 
 [tool.ruff]
@@ -49,7 +49,6 @@ exclude = [
     "dist",
     "migrations",
     "node_modules",
-    "settings/docker.py",
     "static",
     "venv",
 ]
@@ -62,8 +61,8 @@ line-length = 88
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
-# Assume Python 3.9
-target-version = "py39"
+# Assume Python 3.12
+target-version = "py312"
 
 [tool.ruff.mccabe]
 # Unlike Flake8, default to a complexity level of 10.
